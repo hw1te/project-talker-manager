@@ -17,12 +17,11 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-
 app.get('/talker', async (__req, res) => {
   const response = await readFile();
   if (!response) {
-    return res.status(200).json({})
-  } else {
-    return res.status(200).json(response)
-  }
-})
+   return res.status(200).json({});
+  } 
+
+  return res.status(200).json(response);
+});
