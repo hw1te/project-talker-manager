@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const readFile = require('./readFile');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,3 +16,13 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+
+app.get('/talker', async (__req, res) => {
+  const response = await readFile();
+  if (!response) {
+    return res.status(200).json({})
+  } else {
+    return res.status(200).json(response)
+  }
+})
