@@ -1,23 +1,34 @@
-const emailRegex = /^[\w-/.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+function emailValidation(req, res, next) {
+  const { email } = req.body;
 
-function emailValidation(email) {
   if (!email) {
-    return { code: 400, error: 'O campo "email" é obrigatório' };
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
-  if (!emailRegex.test(email)) {
-    return { code: 400, error: 'O "email" deve ter o formato "email@email.com"' };
+  
+  const emailIsValid = email.match(/\S+@\S+\.\S+/);
+
+  if (!emailIsValid) {
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
-  return true;
+
+  next();
 }
 
-function passwordValidation(password) {
+function passwordValidation(req, res, next) {
+  const { password } = req.body;
+
   if (!password) {
-    return { code: 400, error: 'O campo "password" é obrigatório' };
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
+
   if (password.length < 6) {
-    return { code: 400, error: 'O "password" deve ter pelo menos 6 caracteres' };
+    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
-  return true;
+
+  next();
 }
 
-module.exports = { emailValidation, passwordValidation }; 
+module.exports = {
+  emailValidation,
+  passwordValidation,
+};
