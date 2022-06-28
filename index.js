@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const readFile = require('./readFile');
+const token = require('./tokenGenerator');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,4 +41,13 @@ app.get('/talker/:id', async (req, res) => {
   }
 
   return res.status(200).json(talkers);
+});
+
+app.post('/login', (req, res) => {
+   const { email, password } = req.body;
+   if ([email, password].includes(undefined)) {
+    res.status(400).json({ message: 'Faltando informações.' });
+   }
+
+   return res.status(200).json({ token });
 });
