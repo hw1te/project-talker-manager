@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 const readFile = require('./readFile');
-const token = require('./tokenGenerator');
 
 const app = express();
 app.use(bodyParser.json());
@@ -44,10 +44,6 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-   const { email, password } = req.body;
-   if ([email, password].includes(undefined)) {
-    res.status(400).json({ message: 'Faltando informações.' });
-   }
-
+   const token = crypto.randomBytes(8).toString('hex');
    return res.status(200).json({ token });
 });
