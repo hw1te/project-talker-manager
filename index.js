@@ -143,6 +143,7 @@ const watchedAtValidation = (req, res, next) => {
     return next();
 };
 
+// Travei na hora de fazer o app.post, consultei o repositório do aluno Alan Souza https://github.com/tryber/sd-019-b-project-talker-manager/pull/134/commits/287ddf543fd7cebd06ef1dccb6240c81701ffe4d
 app.post('/talker',
   tokenAuthorization,
   nameValidation,
