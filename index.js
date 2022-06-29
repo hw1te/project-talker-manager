@@ -98,15 +98,16 @@ const nameValidation = (req, res, next) => {
 const rateValidation = (req, res, next) => {
   const { rate } = req.body.talk;
 
+  if (rate < 1 || rate > 5) {
+    return res.status(400).json({
+        message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+    });
+}
+
   if (!rate) {
     return res.status(400).json({
       message: 'O campo "rate" é obrigatório',
     });
-  }
-  if (rate < 1 || rate > 5) {
-      return res.status(400).json({
-          message: 'O campo "rate" deve ser um inteiro de 1 à 5',
-      });
   }
 
   return next();
@@ -166,3 +167,30 @@ app.post('/talker',
     writeFile(user);
     res.status(201).json(newUser);
   });
+  // HTTP PUT https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Methods/PUT
+  app.put('/talker/:id',
+    tokenAuthorization,
+    nameValidation,
+    ageValidation,
+    talkValidation,
+    watchedAtValidation,
+    rateValidation,
+    async (req, res) => {
+      // req.params --> https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RequestParam.html
+      const { id } = req.params;
+      const { name, age, talk } = req.body;
+      const talkers = await readFile();
+      const newTalker = talkers.map((talker) => {
+        if (talker.id === +id) {
+          return { 
+            id: +id,
+            ...req.body,
+          };
+        }
+        
+        return talker;
+      });
+
+      writeFile(newTalker);
+      res.status(200).json({ id: +id, name, age, talk });
+    });
