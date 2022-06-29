@@ -177,6 +177,7 @@ app.post('/talker',
     rateValidation,
     async (req, res) => {
       // req.params --> https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RequestParam.html
+      // https://www.geeksforgeeks.org/express-js-req-params-property/
       const { id } = req.params;
       const { name, age, talk } = req.body;
       const talkers = await readFile();
@@ -192,4 +193,20 @@ app.post('/talker',
 
       writeFile(newTalker);
       res.status(200).json({ id: +id, name, age, talk });
+    });
+
+    app.delete('/talker/:id', tokenAuthorization, async (req, res) => {
+      const { id } = req.params;
+      // req.params --> https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RequestParam.html
+      // https://www.geeksforgeeks.org/express-js-req-params-property/
+      try {
+        const talkers = await readFile();
+        const personId = talkers.filter((person) => person.id !== +id);
+        writeFile(personId);
+        // https://restfulapi.net/http-status-204-no-content/#:~:text=HTTP%20Status%20204%20(No%20Content)%20indicates%20that%20the%20server%20has,in%20the%20response%20payload%20body.
+        // Pensei que era (204).json({})
+        return res.status(204).end('');
+      } catch (error) {
+        res.status(400).json({ message: error });
+      }
     });
