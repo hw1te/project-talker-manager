@@ -183,8 +183,7 @@ app.post('/talker',
       const newTalker = talkers.map((talker) => {
         if (talker.id === +id) {
           return { 
-            id: +id,
-            ...req.body,
+            id: +id, name, age, talk,
           };
         }
         
